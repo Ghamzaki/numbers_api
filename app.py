@@ -8,7 +8,7 @@ CORS(app)
 def is_prime(n):
     if n < 2:
         return False
-    for i in range(2, int(n**0.5) + 1):
+    for i in range(2, int(abs(n)**0.5) + 1):
         if n % i == 0:
             return False
     return True
@@ -16,17 +16,17 @@ def is_prime(n):
 def is_perfect(n):
     if n < 2:
         return False
-    divisors = [i for i in range(1, n) if n % i == 0]
-    return sum(divisors) == n
+    divisors = [i for i in range(1, abs(n)) if n % i == 0]
+    return sum(divisors) == abs(n)
 
 def is_armstrong(n):
-    digits = [int(d) for d in str(n)]
+    digits = [int(d) for d in str(abs(n))]
     length = len(digits)
-    return sum(d**length for d in digits) == n
+    return sum(d**length for d in digits) == abs(n)
 
 def get_properties(n):
     properties = []
-    if is_prime(n):
+    if is_prime(abs(n)):
         properties.append("prime")
     if is_perfect(n):
         properties.append("perfect")
@@ -39,8 +39,8 @@ def get_properties(n):
     return properties
 
 def get_fun_fact(n):
-    if is_armstrong(n):
-        return f"{n} is an Armstrong number because {' + '.join(f'{d}^{len(str(n))}' for d in map(int, str(n)))} = {n}"
+    if is_armstrong(abs(n)):
+        return f"{n} is an Armstrong number because {' + '.join(f'{d}^{len(str(abs(n)))}' for d in map(int, str(abs(n))))} = {abs(n)}"
     return f"{n} is a fascinating number with unique properties."
 
 @app.route('/api/classify-number', methods=['GET'])
@@ -56,7 +56,7 @@ def classify_number():
 
     response = {
         "number": number,
-        "is_prime": is_prime(number),
+        "is_prime": is_prime(abs(number)),
         "is_perfect": is_perfect(number),
         "properties": properties,
         "digit_sum": digit_sum,
