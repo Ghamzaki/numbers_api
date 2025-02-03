@@ -1,7 +1,8 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, Response
 from flask_cors import CORS
 from collections import OrderedDict
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -47,7 +48,11 @@ def get_fun_fact(n):
 def classify_number():
     number = request.args.get('number')
     if not number or not number.lstrip('-').isdigit():
-        return jsonify({"number": number, "error": True}), 400
+        return Response(
+            json.dumps({"number": number, "error": True}),
+            status=400,
+            mimetype='application/json'
+        )
 
     number = int(number)
     properties = get_properties(number)
@@ -63,7 +68,12 @@ def classify_number():
         ("digit_sum", digit_sum),
         ("fun_fact", fun_fact)
     ])
-    return jsonify(response), 200
+
+    return Response(
+        json.dumps(response, indent=4),
+        status=200,
+        mimetype='application/json'
+    )
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
