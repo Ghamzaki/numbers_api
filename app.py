@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from collections import OrderedDict
 
 app = Flask(__name__)
 CORS(app)
@@ -26,10 +27,6 @@ def is_armstrong(n):
 
 def get_properties(n):
     properties = []
-    if is_prime(abs(n)):
-        properties.append("prime")
-    if is_perfect(n):
-        properties.append("perfect")
     if is_armstrong(n):
         properties.append("armstrong")
     if n % 2 != 0:
@@ -40,7 +37,10 @@ def get_properties(n):
 
 def get_fun_fact(n):
     if is_armstrong(abs(n)):
-        return f"{n} is an Armstrong number because {' + '.join(f'{d}^{len(str(abs(n)))}' for d in map(int, str(abs(n))))} = {abs(n)}"
+        digits = [int(d) for d in str(abs(n))]
+        length = len(digits)
+        fact = f"{n} is an Armstrong number because {' + '.join(f'{d}^{length}' for d in digits)} = {abs(n)}"
+        return fact
     return f"{n} is a fascinating number with unique properties."
 
 @app.route('/api/classify-number', methods=['GET'])
@@ -54,14 +54,15 @@ def classify_number():
     digit_sum = sum(int(d) for d in str(abs(number)))
     fun_fact = get_fun_fact(number)
 
-    response = {
-        "number": number,
-        "is_prime": is_prime(abs(number)),
-        "is_perfect": is_perfect(number),
-        "properties": properties,
-        "digit_sum": digit_sum,
-        "fun_fact": fun_fact
-    }
+    # Use OrderedDict to enforce key order
+    response = OrderedDict([
+        ("number", number),
+        ("is_prime", is_prime(abs(number))),
+        ("is_perfect", is_perfect(number)),
+        ("properties", properties),
+        ("digit_sum", digit_sum),
+        ("fun_fact", fun_fact)
+    ])
     return jsonify(response), 200
 
 if __name__ == '__main__':
