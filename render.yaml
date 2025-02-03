@@ -2,5 +2,5 @@ services:
   - type: web
     name: number-classifier-api
     runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python app.py
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python app.py"
