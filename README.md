@@ -9,4 +9,4 @@ This API classifies a given number and returns its mathematical properties along
 ## Example Request
 
 ```bash
-GET https://numbers-api-cttx.onrender.com/api/classify-number?number=371
+GET https://numbers-api-jfhl.onrender.com/api/classify-number?number=371
